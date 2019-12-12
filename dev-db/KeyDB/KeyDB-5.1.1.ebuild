@@ -11,7 +11,7 @@ SRC_URI="https://github.com/JohnSully/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 ~x86"
 IUSE="+jemalloc tcmalloc luajit test"
 
 RESTRICT="!test? ( test )"
