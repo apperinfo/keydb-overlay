@@ -1,0 +1,28 @@
+commit 47830d6afcfcdef510fb779c08977cbff32df049
+Author: Petr Vaněk <pv@excello.cz>
+Date:   Thu Dec 12 14:25:20 2019 +0100
+
+    cflags
+
+diff --git a/src/Makefile b/src/Makefile
+index c60795384..a37a970c2 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -94,7 +94,7 @@ endif
+ -include .make-settings
+ 
+ FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS)
+-FINAL_CXXFLAGS=$(CXX_STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(CXXFLAGS) $(REDIS_CFLAGS)
++FINAL_CXXFLAGS=$(CXX_STD) $(WARN) $(OPT) $(DEBUG) $(CXXFLAGS) $(REDIS_CFLAGS)
+ FINAL_LDFLAGS=$(LDFLAGS) $(REDIS_LDFLAGS) $(DEBUG)
+ FINAL_LIBS=-lm
+ FINAL_LIBS+=@LUA_LIBS@
+@@ -179,7 +179,7 @@ ifeq ($(MALLOC),memkind)
+ endif
+ 
+ REDIS_CC=$(QUIET_CC)$(CC) $(FINAL_CFLAGS)
+-REDIS_CXX=$(QUIET_CC)$(CC) $(FINAL_CXXFLAGS)
++REDIS_CXX=$(QUIET_CC)$(CXX) $(FINAL_CXXFLAGS)
+ KEYDB_AS=$(QUIET_CC) as --64 -g
+ REDIS_LD=$(QUIET_LINK)$(CXX) $(FINAL_LDFLAGS)
+ REDIS_INSTALL=$(QUIET_INSTALL)$(INSTALL)
