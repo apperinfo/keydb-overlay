@@ -47,8 +47,7 @@ PATCHES=(
 )
 
 src_prepare() {
-	eapply "${PATCHES[@]}"
-	eapply_user
+	default
 
 	# Copy lua modules into build dir
 	cp "${S}"/deps/lua/src/{fpconv,lua_bit,lua_cjson,lua_cmsgpack,lua_struct,strbuf}.c "${S}"/src || die
