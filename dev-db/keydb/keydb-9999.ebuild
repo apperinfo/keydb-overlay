@@ -1,9 +1,9 @@
-# Copyright 2019 Gentoo Authors
+# Copyright 2019-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-inherit autotools flag-o-matic systemd toolchain-funcs user
+inherit autotools flag-o-matic systemd toolchain-funcs
 
 MY_PN=KeyDB
 
@@ -26,6 +26,9 @@ IUSE="+jemalloc tcmalloc luajit test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="
+	acct-group/redis
+	acct-user/redis
+	!dev-db/redis
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/luad-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
@@ -38,16 +41,11 @@ BDEPEND="virtual/pkgconfig"
 REQUIRED_USE="?? ( jemalloc tcmalloc )"
 
 PATCHES=(
-	"${FILESDIR}/redis-3.2.3-config.patch"
+	"${FILESDIR}/${PN}-5.3-config.patch"
 	"${FILESDIR}/${PN}-5.0-shared.patch"
 	"${FILESDIR}/${PN}-5.0-sharedlua.patch"
 	"${FILESDIR}/${PN}-sentinel-5.0-config.patch"
 )
-
-pkg_setup() {
-	enewgroup redis 75
-	enewuser redis 75 -1 /var/lib/redis redis
-}
 
 src_prepare() {
 	eapply "${PATCHES[@]}"
@@ -134,10 +132,10 @@ src_compile() {
 }
 
 src_install() {
-	insinto /etc/
-	doins redis.conf sentinel.conf
-	use prefix || fowners redis:redis /etc/{redis,sentinel}.conf
-	fperms 0644 /etc/{redis,sentinel}.conf
+	insinto /etc/keydb
+	doins keydb.conf sentinel.conf
+	use prefix || fowners redis:redis /etc/keydb/{keydb,sentinel}.conf
+	fperms 0644 /etc/keydb/{keydb,sentinel}.conf
 
 	# TODO: rc initd and confd
 	# TODO: systemd
