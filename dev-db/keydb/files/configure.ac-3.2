@@ -3,14 +3,14 @@
 
 AC_PREREQ(2.63)
 AC_INIT(keydb, 3.2.3, pv@excello.cz)
-AM_CFLAGS="-std=c11 -pedantic -Wall -W -D__EXTENSIONS__ -D_XPG6"
+AM_CFLAGS="-pedantic -Wall -W -D__EXTENSIONS__ -D_XPG6"
 if test x"$CFLAGS" = x""; then
     AM_CFLAGS="$AM_CFLAGS -O2"
 else
     AM_CFLAGS="$AM_CFLAGS $CFLAGS"
 fi
 
-AM_CXXFLAGS="-std=c++14 -pedantic -Wall -fno-rtti -D__STDC_FORMAT_MACROS"
+AM_CXXFLAGS="-pedantic -Wall -fno-rtti -D__STDC_FORMAT_MACROS"
 if test x"$CXXFLAGS" = x""; then
     AM_CXXFLAGS="$AM_CXXFLAGS -O2"
 else
