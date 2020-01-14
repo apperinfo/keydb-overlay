@@ -1,4 +1,4 @@
-# Copyright 2019 Gentoo Authors
+# Copyright 2019-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -20,7 +20,7 @@ RESTRICT="!test? ( test )"
 
 RDEPEND="
 	luajit? ( dev-lang/luajit:2 )
-	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/luad-5.1*:0 ) )
+	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
 	jemalloc? ( >=dev-libs/jemalloc-5.1:= )"
 
@@ -54,7 +54,7 @@ src_prepare() {
 	cp "${S}"/deps/lua/src/{fpconv,strbuf}.h "${S}"/src || die
 	# Append cflag for lua_cjson
 	# https://github.com/antirez/redis/commit/4fdcd213#diff-3ba529ae517f6b57803af0502f52a40bL61
-	append-cflags "-DENABLE_CJSON_GLOABL"
+	append-cflags "-DENABLE_CJSON_GLOBAL"
 
 	# now we will rewrite present Makefiles
 	local makefiles="" MKF
