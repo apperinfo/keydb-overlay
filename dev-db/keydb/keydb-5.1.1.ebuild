@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit autotools flag-o-matic systemd toolchain-funcs user
+inherit autotools flag-o-matic systemd toolchain-funcs
 
 MY_PN=KeyDB
 
@@ -19,6 +19,8 @@ IUSE="+jemalloc tcmalloc luajit test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="
+	acct-group/redis
+	acct-user/redis
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
@@ -39,11 +41,6 @@ PATCHES=(
 )
 
 S="${WORKDIR}/${MY_PN}-${PV}"
-
-pkg_setup() {
-	enewgroup redis 75
-	enewuser redis 75 -1 /var/lib/redis redis
-}
 
 src_prepare() {
 	eapply "${PATCHES[@]}"
