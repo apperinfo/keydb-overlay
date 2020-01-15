@@ -28,7 +28,6 @@ RESTRICT="!test? ( test )"
 RDEPEND="
 	acct-group/redis
 	acct-user/redis
-	!dev-db/redis
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
