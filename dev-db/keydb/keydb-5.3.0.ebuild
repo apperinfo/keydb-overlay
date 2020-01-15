@@ -26,8 +26,8 @@ IUSE="+jemalloc tcmalloc luajit test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="
-	acct-group/redis
-	acct-user/redis
+	acct-group/keydb
+	acct-user/keydb
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
@@ -133,7 +133,7 @@ src_compile() {
 src_install() {
 	insinto /etc/keydb
 	doins keydb.conf sentinel.conf
-	use prefix || fowners redis:redis /etc/keydb/{keydb,sentinel}.conf
+	use prefix || fowners keydb:keydb /etc/keydb/{keydb,sentinel}.conf
 	fperms 0644 /etc/keydb/{keydb,sentinel}.conf
 
 	# TODO: rc initd and confd
@@ -150,7 +150,7 @@ src_install() {
 	if use prefix; then
 		diropts -m0750
 	else
-		diropts -m0750 -o redis -g redis
+		diropts -m0750 -o keydb -g keydb
 	fi
 
 	keepdir /var/{log,lib}/keydb
