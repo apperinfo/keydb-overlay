@@ -155,3 +155,7 @@ src_install() {
 
 	keepdir /var/{log,lib}/keydb
 }
+
+pkg_postinst() {
+	chown -R keydb:keydb /var/{lib,log}/keydb
+}
