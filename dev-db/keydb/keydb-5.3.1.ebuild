@@ -49,9 +49,6 @@ PATCHES=(
 src_prepare() {
 	default
 
-	# Version 5.3.1 was released without KEYDB_REAL_VERSION set
-	sed -i "s/0.0.0/${PV}/" src/version.h || die "Cannot update version"
-
 	# Copy lua modules into build dir
 	cp "${S}"/deps/lua/src/{fpconv,lua_bit,lua_cjson,lua_cmsgpack,lua_struct,strbuf}.c "${S}"/src || die
 	cp "${S}"/deps/lua/src/{fpconv,strbuf}.h "${S}"/src || die
