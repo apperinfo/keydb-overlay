@@ -1,13 +1,3 @@
-From 220d73ff3c2a77964ad8275744b560df907d2029 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Petr=20Van=C4=9Bk?= <pv@excello.cz>
-Date: Thu, 12 Dec 2019 11:02:30 +0100
-Subject: [PATCH] sharedlua
-
----
- deps/lua/src/lua_cjson.c |  2 +-
- src/Makefile             | 10 ++++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
-
 diff --git a/deps/lua/src/lua_cjson.c b/deps/lua/src/lua_cjson.c
 index c26c0d7b..fa50c410 100644
 --- a/deps/lua/src/lua_cjson.c
@@ -22,7 +12,7 @@ index c26c0d7b..fa50c410 100644
  #ifndef CJSON_MODNAME
  #define CJSON_MODNAME   "cjson"
 diff --git a/src/Makefile b/src/Makefile
-index 701a8a65..8fb685f4 100644
+index 1d6ed001..a2f6231e 100644
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -16,7 +16,7 @@ release_hdr := $(shell sh -c './mkreleasehdr.sh')
@@ -37,7 +27,7 @@ index 701a8a65..8fb685f4 100644
 @@ -99,6 +99,7 @@ FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS)
  FINAL_CXXFLAGS=$(CXX_STD) $(WARN) $(OPT) $(DEBUG) $(CXXFLAGS) $(REDIS_CFLAGS)
  FINAL_LDFLAGS=$(LDFLAGS) $(REDIS_LDFLAGS) $(DEBUG)
- FINAL_LIBS=-lm
+ FINAL_LIBS=-lm -lcurl
 +FINAL_LIBS+=@LUA_LIBS@
  DEBUG=-g -ggdb
  
@@ -56,10 +46,10 @@ index 701a8a65..8fb685f4 100644
 @@ -206,6 +207,7 @@ endif
  REDIS_SERVER_NAME=keydb-server
  REDIS_SENTINEL_NAME=keydb-sentinel
- REDIS_SERVER_OBJ=adlist.o quicklist.o ae.o anet.o dict.o server.o sds.o zmalloc.o lzf_c.o lzf_d.o pqsort.o zipmap.o sha1.o ziplist.o release.o networking.o util.o object.o db.o replication.o rdb.o t_string.o t_list.o t_set.o t_zset.o t_hash.o config.o aof.o pubsub.o multi.o debug.o sort.o intset.o syncio.o cluster.o crc16.o endianconv.o slowlog.o scripting.o bio.o rio.o rand.o memtest.o crc64.o bitops.o sentinel.o notify.o setproctitle.o blocked.o hyperloglog.o latency.o sparkline.o redis-check-rdb.o redis-check-aof.o geo.o lazyfree.o module.o evict.o expire.o geohash.o geohash_helper.o childinfo.o defrag.o siphash.o rax.o t_stream.o listpack.o localtime.o acl.o storage.o rdb-s3.o fastlock.o new.o tracking.o cron.o $(ASM_OBJ)
+ REDIS_SERVER_OBJ=adlist.o quicklist.o ae.o anet.o dict.o server.o sds.o zmalloc.o lzf_c.o lzf_d.o pqsort.o zipmap.o sha1.o ziplist.o release.o networking.o util.o object.o db.o replication.o rdb.o t_string.o t_list.o t_set.o t_zset.o t_hash.o config.o aof.o pubsub.o multi.o debug.o sort.o intset.o syncio.o cluster.o crc16.o endianconv.o slowlog.o scripting.o bio.o rio.o rand.o memtest.o crc64.o bitops.o sentinel.o notify.o setproctitle.o blocked.o hyperloglog.o latency.o sparkline.o redis-check-rdb.o redis-check-aof.o geo.o lazyfree.o module.o evict.o expire.o geohash.o geohash_helper.o childinfo.o defrag.o siphash.o rax.o t_stream.o listpack.o localtime.o acl.o storage.o rdb-s3.o fastlock.o new.o tracking.o cron.o motd.o $(ASM_OBJ)
 +REDIS_SERVER_OBJ+=fpconv.o strbuf.o lua_bit.o lua_cjson.o lua_cmsgpack.o lua_struct.o
  REDIS_CLI_NAME=keydb-cli
- REDIS_CLI_OBJ=anet.o adlist.o dict.o redis-cli.o redis-cli-cpphelper.o zmalloc.o release.o anet.o ae.o crc64.o siphash.o crc16.o storage-lite.o fastlock.o new.o $(ASM_OBJ)
+ REDIS_CLI_OBJ=anet.o adlist.o dict.o redis-cli.o redis-cli-cpphelper.o zmalloc.o release.o anet.o ae.o crc64.o siphash.o crc16.o storage-lite.o fastlock.o new.o motd.o $(ASM_OBJ)
  REDIS_BENCHMARK_NAME=keydb-benchmark
 @@ -261,7 +263,7 @@ endif
  
