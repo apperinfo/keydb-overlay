@@ -21,17 +21,18 @@ fi
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="+jemalloc tcmalloc luajit test"
+IUSE="+jemalloc luajit tcmalloc test"
 
 RESTRICT="!test? ( test )"
 
 RDEPEND="
 	acct-group/keydb
 	acct-user/keydb
+	net-misc/curl[ssl]
+	jemalloc? ( >=dev-libs/jemalloc-5.1:= )
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
-	tcmalloc? ( dev-util/google-perftools )
-	jemalloc? ( >=dev-libs/jemalloc-5.1:= )"
+	tcmalloc? ( dev-util/google-perftools )"
 
 DEPEND="${RDEPEND}
 	test? ( dev-lang/tcl:0= )"
@@ -40,9 +41,9 @@ BDEPEND="virtual/pkgconfig"
 REQUIRED_USE="?? ( jemalloc tcmalloc )"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-5.3-config.patch"
+	"${FILESDIR}/${PN}-6.0.8-config.patch"
 	"${FILESDIR}/${PN}-5.3-shared.patch"
-	"${FILESDIR}/${PN}-5.3.2-sharedlua.patch"
+	"${FILESDIR}/${PN}-6.0.8-sharedlua.patch"
 	"${FILESDIR}/${PN}-sentinel-5.0-config.patch"
 )
 
@@ -65,6 +66,10 @@ src_prepare() {
 			-e 's:$(CXX):@CXX@:g' \
 			-e 's:$(CXXFLAGS):@AM_CXXFLAGS@:g' \
 			-e 's: $(DEBUG)::g' \
+			-e 's: $(DEBUG_FLAGS)::g' \
+			-e 's:$(R_CFLAGS):$(CFLAGS):g' \
+			-e 's:$(R_LDFLAGS):$(LDFLAGS):g' \
+			-e 's:$(OPTIMIZATION)::g' \
 			-e 's:$(OBJARCH)::g' \
 			-e 's:ARCH:TARCH:g' \
 			-e '/^CCOPT=/s:$: $(LDFLAGS):g' \
@@ -103,14 +108,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myeconfargs=(
-		$(use_with luajit)
-	)
-	econf "${myeconfargs[@]}"
-
-	# Linenoise can't be built with -std=c99, see https://bugs.gentoo.org/451164
-	# also, don't define ANSI/c99 for lua twice
-	sed -i -e "s:-std=c99::g" deps/linenoise/Makefile deps/Makefile || die
+	econf $(use_with luajit)
 }
 
 src_compile() {
@@ -118,15 +116,15 @@ src_compile() {
 
 	local myconf=""
 
-	if use tcmalloc; then
-		myconf="${myconf} USE_TCMALLOC=yes"
-	elif use jemalloc; then
-		myconf="${myconf} JEMALLOC_SHARED=yes"
+	if use jemalloc; then
+		myconf="MALLOC=jemalloc"
+	elif use tcmalloc; then
+		myconf="MALLOC=tcmalloc"
 	else
-		myconf="${myconf} MALLOC=yes"
+		myconf="MALLOC=libc"
 	fi
 
-	emake ${myconf} V=1 CC="${CC}" AR="${AR} rcu" RANLIB="${RANLIB}" USEASM=false
+	emake ${myconf} V=1 CC="${CC}" AR="${AR}" RANLIB="${RANLIB}" USEASM=false
 }
 
 src_install() {
