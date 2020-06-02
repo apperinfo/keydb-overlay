@@ -28,7 +28,7 @@ RESTRICT="!test? ( test )"
 RDEPEND="
 	acct-group/keydb
 	acct-user/keydb
-	net-misc/curl
+	net-misc/curl[ssl]
 	luajit? ( dev-lang/luajit:2 )
 	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
 	tcmalloc? ( dev-util/google-perftools )
