@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer type="person">
-<email>pv@excello.cz</email>
-</maintainer>
-<longdescription lang="en">
-</longdescription>
+    <maintainer type="person">
+        <email>pv@excello.cz</email>
+        <name>Petr Vaněk</name>
+    </maintainer>
+    <longdescription lang="en">
+        KeyDB is a high performance fork of Redis with a focus on
+        multithreading, memory efficiency, and high throughput.
+    </longdescription>
+    <upstream>
+        <maintainer status="active">
+            <email>john@csquare.ca</email>
+            <name>John Sully</name>
+        </maintainer>
+        <bugs-to>
+            https://github.com/JohnSully/KeyDB/issues
+        </bugs-to>
+        <remote-id type="github">
+            JohnSully/KeyDB
+        </remote-id>
+    </upstream>
 </pkgmetadata>
