@@ -137,7 +137,7 @@ src_install() {
 	# TODO: systemd
 	# TODO: logrotate
 
-	dodoc 00-RELEASENOTES BUGS CONTRIBUTING README.md
+	dodoc 00-RELEASENOTES BUGS README.md
 
 	dobin src/keydb-cli
 	dosbin src/keydb-{benchmark,server,check-aof,check-rdb}
