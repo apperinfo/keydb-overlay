@@ -3,7 +3,15 @@
 
 EAPI=7
 
-inherit autotools flag-o-matic systemd toolchain-funcs
+# This version of keydb does NOT build with Lua 5.2 or newer at this time:
+#  - 5.3 and 5.4 give:
+# lua_bit.c:83:2: error: #error "Unknown number type, check LUA_NUMBER_* in luaconf.h"
+#  - 5.2 fails with:
+# scripting.c:(.text+0x1f9b): undefined reference to `lua_open'
+#    because lua_open became lua_newstate in 5.2
+LUA_COMPAT=( lua5-1 luajit )
+
+inherit autotools flag-o-matic lua-single systemd toolchain-funcs
 
 MY_PN=KeyDB
 
@@ -12,38 +20,39 @@ HOMEPAGE="https://keydb.dev"
 
 if [[ ${PV} == 9999* ]] ; then
 	inherit git-r3
-	EGIT_REPO_URI="https://github.com/JohnSully/${MY_PN}.git"
+	EGIT_REPO_URI="https://github.com/EQ-Alpha/${MY_PN}.git"
+	EGIT_REPO_BRANCH='unstable'
 else
-	SRC_URI="https://github.com/JohnSully/${MY_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	SRC_URI="https://github.com/EQ-Alpha/${MY_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
 	S="${WORKDIR}/${MY_PN}-${PV}"
 fi
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="+jemalloc luajit tcmalloc test"
+IUSE="+jemalloc tcmalloc test"
 
 RESTRICT="!test? ( test )"
 
 RDEPEND="
+	${LUA_DEPS}
 	acct-group/keydb
 	acct-user/keydb
 	net-misc/curl[ssl]
-	jemalloc? ( >=dev-libs/jemalloc-5.1:= )
-	luajit? ( dev-lang/luajit:2 )
-	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
+	jemalloc? ( dev-libs/jemalloc:= )
 	tcmalloc? ( dev-util/google-perftools )"
 
 DEPEND="${RDEPEND}
 	test? ( dev-lang/tcl:0= )"
 BDEPEND="virtual/pkgconfig"
 
-REQUIRED_USE="?? ( jemalloc tcmalloc )"
+REQUIRED_USE="?? ( jemalloc tcmalloc )
+	${LUA_REQUIRED_USE}"
 
 PATCHES=(
 	"${FILESDIR}/${PN}-6.0.8-config.patch"
 	"${FILESDIR}/${PN}-5.3-shared.patch"
-	"${FILESDIR}/${PN}-6.0.8-sharedlua.patch"
+	"${FILESDIR}/${PN}-9999-sharedlua.patch"
 	"${FILESDIR}/${PN}-sentinel-5.0-config.patch"
 )
 
@@ -81,34 +90,19 @@ src_prepare() {
 	cp "${FILESDIR}"/configure.ac-3.2 configure.ac || die
 
 	# Use the correct pkgconfig name for Lua
-	if false && has_version 'dev-lang/lua:5.3'; then
-		# Lua5.3 gives:
-		#lua_bit.c:83:2: error: #error "Unknown number type, check LUA_NUMBER_* in luaconf.h"
-		LUAPKGCONFIG=lua5.3
-	elif false && has_version 'dev-lang/lua:5.2'; then
-		# Lua5.2 fails with:
-		# scripting.c:(.text+0x1f9b): undefined reference to `lua_open'
-		# Because lua_open because lua_newstate in 5.2
-		LUAPKGCONFIG=lua5.2
-	elif has_version 'dev-lang/lua:5.1'; then
-		LUAPKGCONFIG=lua5.1
-	else
-		LUAPKGCONFIG=lua
-	fi
 	# The upstream configure script handles luajit specially, and is not
 	# effected by these changes.
-	einfo "Selected LUAPKGCONFIG=${LUAPKGCONFIG}"
 	sed -i	\
 		-e "/^AC_INIT/s|, [0-9].+, |, $PV, |" \
 		-e "s:AC_CONFIG_FILES(\[Makefile\]):AC_CONFIG_FILES([${makefiles}]):g" \
-		-e "/PKG_CHECK_MODULES.*\<LUA\>/s,lua5.1,${LUAPKGCONFIG},g" \
+		-e "/PKG_CHECK_MODULES.*\<LUA\>/s,lua5.1,${ELUA},g" \
 		configure.ac || die "Sed failed for configure.ac"
 
 	eautoreconf
 }
 
 src_configure() {
-	econf $(use_with luajit)
+	econf $(use_with lua_single_target_luajit luajit)
 }
 
 src_compile() {
