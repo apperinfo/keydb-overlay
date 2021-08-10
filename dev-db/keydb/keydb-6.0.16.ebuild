@@ -31,7 +31,7 @@ RDEPEND="
 	net-misc/curl[ssl]
 	jemalloc? ( >=dev-libs/jemalloc-5.1:= )
 	luajit? ( dev-lang/luajit:2 )
-	!luajit? ( || ( dev-lang/lua:5.1 =dev-lang/lua-5.1*:0 ) )
+	!luajit? ( dev-lang/lua:5.1 )
 	tcmalloc? ( dev-util/google-perftools )"
 
 DEPEND="${RDEPEND}
