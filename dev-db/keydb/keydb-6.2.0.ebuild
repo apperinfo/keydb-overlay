@@ -16,7 +16,7 @@ inherit autotools flag-o-matic lua-single systemd toolchain-funcs
 MY_PN=KeyDB
 
 DESCRIPTION="A persistent caching system, key-value and data structures database"
-HOMEPAGE="https://keydb.dev"
+HOMEPAGE="https://keydb.dev https://github.com/EQ-Alpha/KeyDB"
 
 if [[ ${PV} == 9999* ]] ; then
 	inherit git-r3
