@@ -15,10 +15,10 @@
             <name>John Sully</name>
         </maintainer>
         <bugs-to>
-            https://github.com/JohnSully/KeyDB/issues
+            https://github.com/EQ-Alpha/KeyDB
         </bugs-to>
         <remote-id type="github">
-            JohnSully/KeyDB
+            EQ-Alpha/KeyDB
         </remote-id>
     </upstream>
 </pkgmetadata>
