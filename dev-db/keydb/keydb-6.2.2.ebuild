@@ -11,7 +11,7 @@ EAPI=8
 #    because lua_open became lua_newstate in 5.2
 LUA_COMPAT=( lua5-1 luajit )
 
-inherit autotools flag-o-matic lua-single systemd toolchain-funcs
+inherit autotools flag-o-matic lua-single toolchain-funcs
 
 MY_PN=KeyDB
 
