@@ -21,7 +21,7 @@ HOMEPAGE="https://keydb.dev https://github.com/EQ-Alpha/KeyDB"
 if [[ ${PV} == 9999* ]] ; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/EQ-Alpha/${MY_PN}.git"
-	EGIT_REPO_BRANCH='unstable'
+	EGIT_BRANCH='unstable'
 else
 	SRC_URI="https://github.com/EQ-Alpha/${MY_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
